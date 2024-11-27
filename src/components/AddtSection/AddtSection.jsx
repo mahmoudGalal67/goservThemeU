@@ -2,12 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { Modal } from "react-responsive-modal";
 
 import "react-responsive-modal/styles.css";
-import "./EditSection.css";
+import "../EditSection/EditSection.css";
 import { request } from "../utils/Request";
 
-function EditSection({ setModalShow, modalShow, activeModal }) {
+function AddtSection({ setModalShow, modalShow, activeModal }) {
   const onCloseModal = () => setModalShow(false);
-  const [sectionData, setsectionData] = useState([]);
+  const [sectionData, setsectionData] = useState([
+    {
+      name: "",
+      description: "",
+    },
+  ]);
 
   const add = () => {
     setsectionData((prev) => [
@@ -22,20 +27,6 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
   const deleteSection = (e, i) => {
     setsectionData(sectionData.filter((item, index) => index !== i));
   };
-
-  useEffect(() => {
-    const getAllBrands = async () => {
-      try {
-        const { data } = await request({
-          url: "/api/dashboard/brands?lang=en",
-        });
-        setsectionData(data);
-      } catch (error) {
-        console.log(err);
-      }
-    };
-    getAllBrands();
-  }, []);
 
   const handleInputChange = (e, i) => {
     setsectionData((prev) =>
@@ -74,7 +65,7 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
     onCloseModal();
     try {
       const { data } = await request({
-        url: "/api/dashboard/update-brands",
+        url: "/api/dashboard/brands",
         method: "post",
         headers: {
           "Content-Type": "multipart/form-data",
@@ -185,4 +176,4 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
   );
 }
 
-export default EditSection;
+export default AddtSection;

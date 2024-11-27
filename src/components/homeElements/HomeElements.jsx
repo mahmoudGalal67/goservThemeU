@@ -21,45 +21,17 @@ import { useCookies } from "react-cookie";
 import "./HomeElements.css";
 import Section from "../Section/Section";
 import EditSection from "../EditSection/EditSection";
-import AddStaticBanner from "../ِAddStaticBanner/AddStaticBanner";
+import AddtSection from "../AddtSection/AddtSection";
 import { request } from "../utils/Request";
 import { Button } from "react-bootstrap";
-
-const getSections = [
-  {
-    id: 1,
-    title: "section 1",
-  },
-  {
-    id: 2,
-    title: "section 2",
-  },
-  {
-    id: 3,
-    title: "section 3",
-  },
-  {
-    id: 4,
-    title: "section 4",
-  },
-  {
-    id: 5,
-    title: "section 5",
-  },
-  {
-    id: 6,
-    title: "section 6",
-  },
-];
 
 function HomeElements({ settoggleSidebar }) {
   const [cookies, setCookie] = useCookies(["user"]);
 
-  const [activeEditSection, setactiveEditSection] = useState(null);
-
-  const [modalShow, setModalShow] = useState(false);
+  const [EditmodalShow, setEditModalShow] = useState(false);
+  const [AddmodalShow, setAddModalShow] = useState(false);
   const [sections, setSections] = useState([]);
-  const [activeEditModal, setactiveEditModal] = useState(null);
+  const [activeModal, setactiveModal] = useState(null);
 
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 10 } }),
@@ -147,87 +119,68 @@ function HomeElements({ settoggleSidebar }) {
               <li className="add-wrapper-list">
                 <div className="add-wrapper-sections">
                   <button
-                    onClick={() => setactiveEditSection("ADD staticBanner")}
+                    onClick={() => {
+                      setactiveModal("brands");
+                      setAddModalShow(true);
+                    }}
                   >
-                    Static Banner{" "}
+                    brands{" "}
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD Static Products")}
-                  >
+                  <button onClick={() => setactiveModal("ADD Static Products")}>
                     ADD Static Products
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD Dynamic Banner")}
-                  >
+                  <button onClick={() => setactiveModal("ADD Dynamic Banner")}>
                     ADD Dynamic Banner
                   </button>
                   <button
-                    onClick={() => setactiveEditSection("ADD Dynamic Products")}
+                    onClick={() => setactiveModal("ADD Dynamic Products")}
                   >
                     ADD Dynamic Products
                   </button>
-                  <button onClick={() => setactiveEditSection("ADD Features")}>
+                  <button onClick={() => setactiveModal("ADD Features")}>
                     ADD Features
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD Count Down")}
-                  >
+                  <button onClick={() => setactiveModal("ADD Count Down")}>
                     ADD Count Down
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD staticBanner")}
-                  >
+                  <button onClick={() => setactiveModal("ADD staticBanner")}>
                     Static Banner{" "}
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD Static Products")}
-                  >
+                  <button onClick={() => setactiveModal("ADD Static Products")}>
                     ADD Static Products
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD Dynamic Banner")}
-                  >
+                  <button onClick={() => setactiveModal("ADD Dynamic Banner")}>
                     ADD Dynamic Banner
                   </button>
                   <button
-                    onClick={() => setactiveEditSection("ADD Dynamic Products")}
+                    onClick={() => setactiveModal("ADD Dynamic Products")}
                   >
                     ADD Dynamic Products
                   </button>
-                  <button onClick={() => setactiveEditSection("ADD Features")}>
+                  <button onClick={() => setactiveModal("ADD Features")}>
                     ADD Features
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD Count Down")}
-                  >
+                  <button onClick={() => setactiveModal("ADD Count Down")}>
                     ADD Count Down
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD staticBanner")}
-                  >
+                  <button onClick={() => setactiveModal("ADD staticBanner")}>
                     Static Banner{" "}
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD Static Products")}
-                  >
+                  <button onClick={() => setactiveModal("ADD Static Products")}>
                     ADD Static Products
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD Dynamic Banner")}
-                  >
+                  <button onClick={() => setactiveModal("ADD Dynamic Banner")}>
                     ADD Dynamic Banner
                   </button>
                   <button
-                    onClick={() => setactiveEditSection("ADD Dynamic Products")}
+                    onClick={() => setactiveModal("ADD Dynamic Products")}
                   >
                     ADD Dynamic Products
                   </button>
-                  <button onClick={() => setactiveEditSection("ADD Features")}>
+                  <button onClick={() => setactiveModal("ADD Features")}>
                     ADD Features
                   </button>
-                  <button
-                    onClick={() => setactiveEditSection("ADD Count Down")}
-                  >
+                  <button onClick={() => setactiveModal("ADD Count Down")}>
                     ADD Count Down
                   </button>
                 </div>
@@ -244,8 +197,8 @@ function HomeElements({ settoggleSidebar }) {
                 <Section
                   id={el.id}
                   title={el.name}
-                  setModalShow={setModalShow}
-                  setactiveEditModal={setactiveEditModal}
+                  setModalShow={setEditModalShow}
+                  setactiveModal={setactiveModal}
                   settoggleSidebar={settoggleSidebar}
                 />
               </div>
@@ -264,14 +217,15 @@ function HomeElements({ settoggleSidebar }) {
         </ul>
       </DndContext>
       <EditSection
-        setModalShow={setModalShow}
-        modalShow={modalShow}
-        activeEditModal={activeEditModal}
+        setModalShow={setEditModalShow}
+        modalShow={EditmodalShow}
+        activeModal={activeModal}
       />
 
-      <AddStaticBanner
-        activeEditSection={activeEditSection}
-        setactiveEditSection={setactiveEditSection}
+      <AddtSection
+        setModalShow={setAddModalShow}
+        modalShow={AddmodalShow}
+        activeModal={activeModal}
       />
     </>
   );

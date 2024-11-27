@@ -19,7 +19,10 @@ const cartSlice = createSlice({
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
-        state.items.push({ ...action.payload, quantity: 1 });
+        state.items.push({
+          ...action.payload,
+          quantity: 1,
+        });
       }
       saveCartToLocalStorage(state.items);
     },
@@ -31,6 +34,7 @@ const cartSlice = createSlice({
       const item = state.items.find((item) => item.id === action.payload.id);
       if (item) {
         item.quantity = action.payload.quantity;
+        item.price = action.payload.price;
       } else {
         state.items.push({ ...action.payload });
       }

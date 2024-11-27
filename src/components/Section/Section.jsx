@@ -3,7 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import "./Sextion.css";
 
-function Section({ id, title, setModalShow, setactiveEditModal }) {
+function Section({ id, title, setModalShow, setactiveModal }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
@@ -13,7 +13,7 @@ function Section({ id, title, setModalShow, setactiveEditModal }) {
   };
 
   const handleClick = () => {
-    setactiveEditModal(title);
+    setactiveModal(title);
     setModalShow(true);
   };
 

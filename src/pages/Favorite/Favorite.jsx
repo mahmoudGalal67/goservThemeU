@@ -33,15 +33,15 @@ function Favorite() {
                   >
                     <div className="py-3">
                       <img
-                        src={`https://goservback.alyoumsa.com/public/storage/${product?.all_photos[0]}`}
+                        src={`https://goservback.alyoumsa.com/public/storage/${product?.photos[0]}`}
                         height={100}
                         width={100}
-                        alt={product.title}
+                        alt={product.name.en}
                       />
                     </div>
 
                     <div className="mx-3 mt-3">
-                      <p className="fw-medium mt-3">{product.title}</p>
+                      <p className="fw-medium mt-3">{product.name.en}</p>
                       <span className="text-secondary">
                         {product.price} ر.س
                       </span>

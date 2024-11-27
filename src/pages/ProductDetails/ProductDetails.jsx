@@ -20,22 +20,17 @@ import "./ProductDetails.css";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-const sideImages = [
-  "image-five.11880e87fe2172358c1d.png",
-  "product-five.d2d5089cdc9dc1398bed.png",
-  "phone.dfce5cb4f77af5fe35ec.png",
-  "image-four.ba1b0ca752d3139c2a1f.png",
-];
+import { products } from "../../components/StaticProducts/dummyProducts";
 
 function ProductDetails() {
   const [ProductDetails, setProductDetails] = useState(null);
-  const [ProductColorID, setProductColorID] = useState(null);
-  const [productcolorimages, setproductcolorimages] = useState([]);
+  const [ProductColorID, setProductColorID] = useState(0);
+  const [SizeId, setSizeId] = useState(0);
   const [randint, setrandint] = useState(null);
   const [err, setErr] = useState(null);
   const dispatch = useDispatch();
 
-  const [count, setcount] = useState(1);
+  const [count, setcount] = useState(ProductDetails?.quantity || 1);
 
   const cartItems = useSelector((state) => state.cart.items);
   const favoriteItems = useSelector((state) => state.favorites.items);
@@ -45,23 +40,21 @@ function ProductDetails() {
   const setFirstPhoto = (i) => {
     setProductDetails((prev) => ({
       ...prev,
-      firstPhoto: ProductDetails.Photos[i],
+      firstPhoto: ProductDetails.photos[i],
     }));
+  };
+
+  const handleSizeChange = (e) => {
+    setSizeId(Number(e.target.value));
   };
 
   useEffect(() => {
     const getProductDetails = async () => {
       try {
         const { data } = await request({
-          url: `/api/website/products/${id}?lang=en`,
+          url: `/api/website/products/${id}`,
         });
-        let productColors = data.data.color_photos_quantity[0];
-        let images = productColors?.photos;
-        let colorsId = data.data.color_photos_quantity[0]?.product_color_id;
-
         setProductDetails(data.data);
-        setproductcolorimages(images);
-        setProductColorID(colorsId);
       } catch (error) {
         setErr(error);
       }
@@ -76,15 +69,6 @@ function ProductDetails() {
     }
     setrandint(randomIntFromInterval(100, 300));
   }, []);
-
-  useEffect(() => {
-    ProductDetails &&
-      setproductcolorimages(
-        ProductDetails.color_photos_quantity.find((item) => {
-          return item.product_color_id == ProductColorID;
-        }).photos
-      );
-  }, [ProductColorID]);
 
   const handleAddToCart = (product) => {
     if (isProductInCart(product.id)) {
@@ -102,8 +86,8 @@ function ProductDetails() {
     }
   };
 
-  const isProductInCart = (productId) => {
-    return cartItems.some((item) => item.id === productId);
+  const isProductInCart = (product) => {
+    return cartItems.some((item) => item.id === product.id);
   };
 
   const isProductFavorite = (productId) => {
@@ -115,6 +99,9 @@ function ProductDetails() {
       updateItemQuantity({
         ...ProductDetails,
         quantity: count,
+        price:
+          ProductDetails.product_colors[ProductColorID].product_color_sizes
+            .price[SizeId],
       })
     );
   };
@@ -134,7 +121,7 @@ function ProductDetails() {
       <Nav />
       <div className="container">
         <div className="left">
-          <h2>{ProductDetails.name}</h2>
+          <h2>{ProductDetails.name.en}</h2>
           <div className="extra-info">
             مرة <span style={{ color: "#60f4d4" }}>250</span> تم شرائها
             <img src="/fire.svg" alt="" />
@@ -161,7 +148,7 @@ function ProductDetails() {
             يشاهد المنتج الان{" "}
             <span style={{ color: "#60f4d4" }}>{randint}</span> شخص
           </div>
-          <p>{ProductDetails.description}</p>
+          <p>{ProductDetails.description.en}</p>
           <Accordion defaultActiveKey="0">
             <Accordion.Item>
               <Accordion.Header>
@@ -174,31 +161,36 @@ function ProductDetails() {
                 تخصيص المنتج{" "}
               </Accordion.Header>
               <Accordion.Body className="details">
-                {/* <div className="images">
+                <div className="images">
                   <h3>صور المنتج</h3>
-                  <div className="wrapper flex">
-                    {productcolorimages?.map((img, i) => (
-                      <img key={i} src={img} />
-                    ))}
+                  <div className="wrapper flex justify-content-end">
+                    {ProductDetails.product_colors[ProductColorID].photos.map(
+                      (img, i) => (
+                        <img
+                          key={i}
+                          src={`https://goservback.alyoumsa.com/public/storage/${img}`}
+                          style={{
+                            width: "120px",
+                            height: "120px ",
+                          }}
+                        />
+                      )
+                    )}
                   </div>
-                </div> */}
+                </div>
                 <div className="colors">
                   <h3>الألوان المتاحة</h3>
                   <div className="wrapper flex">
-                    {ProductDetails.color_photos_quantity.map((item) => (
+                    {ProductDetails.product_colors.map((item, i) => (
                       <div
-                        key={item.product_color_id}
-                        className={
-                          item.product_color_id == ProductColorID
-                            ? "active"
-                            : ""
-                        }
-                        onClick={() => setProductColorID(item.product_color_id)}
+                        key={i}
+                        className={i == ProductColorID ? "active" : ""}
+                        onClick={() => setProductColorID(Number(i))}
                         style={{
                           width: "30px",
                           height: "30px",
                           borderRadius: "50%",
-                          backgroundColor: item.color,
+                          backgroundColor: item.hex_code,
                           cursor: "pointer",
                         }}
                       ></div>
@@ -248,8 +240,26 @@ function ProductDetails() {
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
+          <div className="choose-size flex w-100 justify-content-between gap-3 p-4">
+            <select
+              onChange={(e) => handleSizeChange(e)}
+              className="w-75 p-2 bg-light rounded-2 border-1 border-black-50 text-black-50"
+            >
+              {ProductDetails.product_colors[
+                ProductColorID
+              ].product_color_sizes.size.map((size, i) => (
+                <option value={i}>{size}</option>
+              ))}
+            </select>
+            <div className="fs-6 fw-bold">اختر المقاس</div>
+          </div>
           <div className="count">
-            <div className="price">{ProductDetails.price}</div>
+            <div className="price">
+              {
+                ProductDetails.product_colors[ProductColorID]
+                  .product_color_sizes.price[SizeId]
+              }
+            </div>
             <div className="counter">
               <div onClick={() => setcount((prev) => prev + 1)}>+</div>
               <div>{count}</div>
@@ -267,7 +277,7 @@ function ProductDetails() {
               onClick={() => handleUpdateQuantity(ProductDetails)}
             >
               <img src="/cartcolored.svg" alt="" />
-              {isProductInCart(ProductDetails.id)
+              {isProductInCart(ProductDetails)
                 ? " Update "
                 : "Add to cart"}{" "}
             </button>
@@ -291,19 +301,18 @@ function ProductDetails() {
           <div className="wrapper flex">
             <div className="main-img">
               <img
-                // src={
-                //   `/${ProductDetails.firstPhoto}` ||
-                //   "image-two.dd7d3cfc16bf56c43f01.png"
-                // }
                 src={
-                  `https://goservback.alyoumsa.com/public/storage/${ProductDetails?.firstPhoto}` ||
-                  "image-two.dd7d3cfc16bf56c43f01.png"
+                  `https://goservback.alyoumsa.com/public/storage/${
+                    ProductDetails.firstPhoto != undefined
+                      ? ProductDetails?.firstPhoto
+                      : ProductDetails?.photos[0]
+                  }` || "image-two.dd7d3cfc16bf56c43f01.png"
                 }
                 alt=""
               />
             </div>
             <div className="side-images">
-              {ProductDetails?.Photos.map((img, i) => (
+              {ProductDetails?.photos.map((img, i) => (
                 <div
                   className={
                     img == ProductDetails.firstPhoto
@@ -320,19 +329,6 @@ function ProductDetails() {
                   />
                 </div>
               ))}
-              {/* {sideImages.map((img, i) => (
-                <div
-                  className={
-                    img == ProductDetails.firstPhoto
-                      ? "side-img active"
-                      : "side-img"
-                  }
-                  style={{ cursor: "pointer" }}
-                  key={i}
-                >
-                  <img src={`/${img}`} alt="" />
-                </div>
-              ))} */}
             </div>
           </div>
         </div>

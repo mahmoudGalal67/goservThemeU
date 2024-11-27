@@ -6,8 +6,9 @@ import { addFavorite, removeFavorite } from "../../pages/Redux/FavoriteSlice";
 import { Link } from "react-router-dom";
 import "./StaticProducts.css";
 import FavButton from "../FavButton/FavButton";
-import { DiVisualstudio } from "react-icons/di";
 import CartButton from "../CartButton/CartButton";
+
+import { products } from "./dummyProducts";
 
 const truncateTitle = (title, numWords) => {
   const words = title.split(" ");
@@ -22,18 +23,6 @@ function StaticProducts({ searchInput }) {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
   const favoriteItems = useSelector((state) => state.favorites.items);
-
-  // useEffect(() => {
-  // Replace with your API endpoint And change variables names
-  //   axios
-  //     .get("https://fakestoreapi.com/products")
-  //     .then((response) => {
-  //       setStaticProducts(response.data.slice(0, 8));
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching products:", error);
-  //     });
-  // }, []);
 
   const handleAddToCart = (product) => {
     if (isProductInCart(product.id)) {
@@ -66,7 +55,6 @@ function StaticProducts({ searchInput }) {
           "https://goservback.alyoumsa.com/api/dashboard/products"
         );
         console.log("products", response.data);
-
         if (searchInput) {
           const results = response.data.filter((product) => {
             const searchTerms = searchInput.toLowerCase().split(" ");
@@ -120,7 +108,7 @@ function StaticProducts({ searchInput }) {
             style={{ width: "200px", height: "550px", padding: "12px" }}
           >
             <img
-              src={`https://goservback.alyoumsa.com/public/storage/${product.all_photos[0]}`}
+              src={`https://goservback.alyoumsa.com/public/storage/${product.photos[0]}`}
               alt=""
               style={{
                 width: "100%",
@@ -130,7 +118,7 @@ function StaticProducts({ searchInput }) {
             />
             <div className="title">ساعات</div>
             <Link to={`/productDetails/${product.id}`}>
-              <p className="desc">{truncateTitle(product.name, 2)}</p>
+              <p className="desc">{truncateTitle(product.name.en, 2)}</p>
             </Link>
             <p className="info">{product.category}</p>
             <div className="price-wrapper">

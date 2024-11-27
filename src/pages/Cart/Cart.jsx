@@ -25,7 +25,6 @@ function Cart() {
   //     navigate("/");
   //   }
   // }, [user, navigate]);
-  console.log(products);
   const totalAmount = products.reduce(
     (total, product) => total + product.price * product.quantity,
     0
@@ -33,20 +32,25 @@ function Cart() {
   const productSummary = products
     .map(
       (product) =>
-        `${product.title}: ${product.quantity} x ${product.price} ر.س`
+        `${product.name.en}: ${product.quantity} x ${product.price} ر.س`
     )
     .join(", ");
 
   const handleIncreaseQuantity = (id) => {
     const product = products.find((product) => product.id === id);
-    dispatch(updateItemQuantity({ id, quantity: product.quantity + 1 }));
+    dispatch(
+      updateItemQuantity({
+        ...product,
+        quantity: product.quantity + 1,
+      })
+    );
   };
 
   const handleDecreaseQuantity = (id) => {
     const product = products.find((product) => product.id === id);
     dispatch(
       updateItemQuantity({
-        id,
+        ...product,
         quantity: product.quantity > 1 ? product.quantity - 1 : 1,
       })
     );
@@ -105,15 +109,15 @@ function Cart() {
                   <div className="d-flex justify-content-start mt-2">
                     <div className="py-3">
                       <img
-                        src={`https://goservback.alyoumsa.com/public/storage/${product?.all_photos[0]}`}
+                        src={`https://goservback.alyoumsa.com/public/storage/${product?.photos[0]}`}
                         height={100}
                         width={100}
-                        alt={product.title}
+                        alt={product.name.en}
                       />
                     </div>
 
                     <div className="mx-3 mt-3">
-                      <p className="fw-medium mt-3">{product.name}</p>
+                      <p className="fw-medium mt-3">{product.name.en}</p>
                       <span className="text-secondary">
                         {product.price} ر.س
                       </span>
