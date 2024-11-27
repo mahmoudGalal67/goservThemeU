@@ -77,7 +77,6 @@ function HomeElements({ settoggleSidebar }) {
           url: "/api/website/sections?lang=en",
         });
         setSections(data);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching brands data:", error);
       }
@@ -158,6 +157,7 @@ function HomeElements({ settoggleSidebar }) {
                   setModalShow={setEditModalShow}
                   setactiveModal={setactiveModal}
                   settoggleSidebar={settoggleSidebar}
+                  setSections={setSections}
                 />
               </div>
             ))}

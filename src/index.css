@@ -82,7 +82,7 @@ button.custom-link-ouline img {
 }
 
 .error {
-  color: rgb(212, 65, 65);
+  color: rgb(212, 65, 65) !important;
   text-align: center;
   width: 100%;
   display: block;

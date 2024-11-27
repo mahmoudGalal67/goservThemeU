@@ -7,6 +7,7 @@ import { request } from "../utils/Request";
 
 function AddtSection({ setModalShow, modalShow, activeModal }) {
   const [loading, setloading] = useState(false);
+  const [error, seterror] = useState(null);
 
   const onCloseModal = () => setModalShow(false);
   const [sectionData, setsectionData] = useState([
@@ -23,6 +24,7 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
       {
         title: "",
         description: "",
+        link: "#",
       },
     ]);
   };
@@ -79,19 +81,20 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
         },
         // Authorization: `Bearer ${cookies?.user}`,
       });
-      setloading(false);
-      setsectionData([
-        {
-          title: { en: "", ar: "" },
-          description: { en: "", ar: "" },
-          link: "#",
-        },
-      ]);
-      onCloseModal();
+      // setloading(false);
+      // setsectionData([
+      //   {
+      //     title: { en: "", ar: "" },
+      //     description: { en: "", ar: "" },
+      //     link: "#",
+      //   },
+      // ]);
+      // onCloseModal();
+      document.location.reload();
     } catch (err) {
       setloading(false);
 
-      console.log(err);
+      seterror(err.response.data.message);
     }
   };
 
@@ -174,6 +177,7 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
             <button className="submit" type="submit" disabled={loading}>
               {loading ? "loading ..." : "حفظ التغيرات"}
             </button>
+            {error && <span className="error">{error}</span>}
           </form>
         </Modal>
       </div>

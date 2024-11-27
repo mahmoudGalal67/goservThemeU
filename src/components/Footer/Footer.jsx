@@ -9,50 +9,50 @@ function Footer() {
   const [aboutUs, setAboutUs] = useState([""]);
   const [contactUs, setContactUs] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get(
-        "http://goservback.sallaplus.com/public/api/website/social-media?lang=en"
-      )
-      .then((response) => {
-        const data = response.data.data;
-        setSocialMedia(data);
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       "http://goservback.sallaplus.com/public/api/website/social-media?lang=en"
+  //     )
+  //     .then((response) => {
+  //       const data = response.data.data;
+  //       setSocialMedia(data);
 
-        const facebookData = data.find((item) => item.platform === "facebook");
-        const snapchatData = data.find((item) => item.platform === "snapchat");
-        setFacebookData(facebookData);
-        setSnapchatData(snapchatData);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  }, []);
+  //       const facebookData = data.find((item) => item.platform === "facebook");
+  //       const snapchatData = data.find((item) => item.platform === "snapchat");
+  //       setFacebookData(facebookData);
+  //       setSnapchatData(snapchatData);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching products:", error);
+  //     });
+  // }, []);
 
-  useEffect(() => {
-    axios
-      .get(
-        "http://goservback.sallaplus.com/public/api/website/contacts?lang=en"
-      )
-      .then((response) => {
-        setContactUs(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching contacts:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       "http://goservback.sallaplus.com/public/api/website/contacts?lang=en"
+  //     )
+  //     .then((response) => {
+  //       setContactUs(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching contacts:", error);
+  //     });
+  // }, []);
 
-  useEffect(() => {
-    axios
-      .get(
-        "http://goservback.sallaplus.com/public/api/website/about-store?lang=en"
-      )
-      .then((response) => {
-        setAboutUs(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching about us:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       "http://goservback.sallaplus.com/public/api/website/about-store?lang=en"
+  //     )
+  //     .then((response) => {
+  //       setAboutUs(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching about us:", error);
+  //     });
+  // }, []);
 
   return (
     <footer>

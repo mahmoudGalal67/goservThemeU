@@ -54,16 +54,15 @@ function StaticProducts({ searchInput }) {
         const response = await axios.get(
           "https://goservback.alyoumsa.com/api/dashboard/products"
         );
-        console.log("products", response.data);
         if (searchInput) {
           const results = response.data.filter((product) => {
             const searchTerms = searchInput.toLowerCase().split(" ");
             return searchTerms.some((term) =>
               [
-                product.name.toLowerCase(),
-                product.description.toLowerCase(),
-                product.category_name.toLowerCase(),
-                product.brand_name.toLowerCase(),
+                product.name.en.toLowerCase(),
+                product.description.en.toLowerCase(),
+                // product.category_name.toLowerCase(),
+                // product.brand_name.toLowerCase(),
               ].some((field) => field.includes(term))
             );
           });

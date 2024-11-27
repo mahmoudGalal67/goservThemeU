@@ -7,6 +7,8 @@ import { request } from "../utils/Request";
 
 function EditSection({ setModalShow, modalShow, activeModal }) {
   const [loading, setloading] = useState(false);
+  const [error, seterror] = useState(null);
+
   const onCloseModal = () => setModalShow(false);
   const [sectionData, setsectionData] = useState(null);
 
@@ -32,7 +34,6 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
             url: `/api/dashboard/get-banner/${activeModal.id}`,
           });
           setsectionData(data.data.items);
-          setloading(false);
         } catch (error) {
           console.log(error);
         }
@@ -106,12 +107,12 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
         },
         // Authorization: `Bearer ${cookies?.user}`,
       });
-      setloading(false);
-
-      onCloseModal();
+      // setloading(false);
+      // onCloseModal();
+      document.location.reload();
     } catch (err) {
       setloading(false);
-      console.log(err);
+      seterror(err.response.data.message);
     }
   };
   if (!sectionData || !activeModal) {
@@ -204,6 +205,7 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
             <button className="submit" type="submit" disabled={loading}>
               {loading ? "loading ..." : "حفظ التغيرات"}
             </button>
+            {error && <span className="error">{error}</span>}
           </form>
         </Modal>
       </div>

@@ -35,15 +35,15 @@ function Home() {
         });
         data.map((item) => {
           if (item.name == "Sec1") {
-            section.push(<Features />);
+            section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec2") {
-            section.push(<Blogs />);
+            section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec3") {
             section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec4") {
-            section.push(<StaticSlider />);
+            section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec5") {
-            section.push(<Offers />);
+            section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec6") {
             section.push(<CountdownProduct />);
           }
