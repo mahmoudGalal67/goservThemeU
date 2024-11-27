@@ -6,6 +6,8 @@ import "../EditSection/EditSection.css";
 import { request } from "../utils/Request";
 
 function AddtSection({ setModalShow, modalShow, activeModal }) {
+  const [loading, setloading] = useState(false);
+
   const onCloseModal = () => setModalShow(false);
   const [sectionData, setsectionData] = useState([
     {
@@ -43,8 +45,6 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
     );
   };
 
-  console.log(sectionData);
-
   const handleFileChange = (e, i) => {
     setsectionData((prev) =>
       prev.map((el, index) => {
@@ -62,19 +62,37 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    onCloseModal();
+    const newData = sectionData.map((item) => {
+      if (item.file) {
+        return { ...item, logo: item.file };
+      } else {
+        return item;
+      }
+    });
     try {
+      setloading(true);
+
       const { data } = await request({
-        url: "/api/dashboard/brands",
+        url: "/api/dashboard/store-brands",
         method: "post",
         headers: {
           "Content-Type": "multipart/form-data",
         },
         // withCredentials: true,
-        data: { brands: sectionData },
+        data: { brands: newData },
         // Authorization: `Bearer ${cookies?.user}`,
       });
+      setloading(false);
+      setsectionData([
+        {
+          name: "",
+          description: "",
+        },
+      ]);
+      onCloseModal();
     } catch (err) {
+      setloading(false);
+
       console.log(err);
     }
   };
@@ -140,7 +158,6 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
                 </label>
                 <input
                   type="file"
-                  required
                   id={`file ${i}`}
                   style={{ display: "none" }}
                   onChange={(e) => handleFileChange(e, i)}
@@ -166,8 +183,8 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
             <button className="add" onClick={add}>
               اضافة +
             </button>
-            <button className="submit" type="submit">
-              حفظ التغيرات
+            <button className="submit" type="submit" disabled={loading}>
+              {loading ? "loading ..." : "حفظ التغيرات"}
             </button>
           </form>
         </Modal>

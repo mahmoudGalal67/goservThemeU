@@ -52,9 +52,9 @@ function ProductDetails() {
     const getProductDetails = async () => {
       try {
         const { data } = await request({
-          url: `/api/website/products/${id}`,
+          url: `/api/dashboard/products/${id}`,
         });
-        setProductDetails(data.data);
+        setProductDetails(data.product);
       } catch (error) {
         setErr(error);
       }
@@ -114,7 +114,6 @@ function ProductDetails() {
   if (!ProductDetails) {
     return <div> loading ...</div>;
   }
-
   return (
     <div className="product-details">
       <Info />

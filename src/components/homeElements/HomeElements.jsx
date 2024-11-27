@@ -126,62 +126,11 @@ function HomeElements({ settoggleSidebar }) {
                   >
                     brands{" "}
                   </button>
-                  <button onClick={() => setactiveModal("ADD Static Products")}>
-                    ADD Static Products
+                  <button onClick={() => setactiveModal({ name: "banners" })}>
+                    ADD Banners
                   </button>
-                  <button onClick={() => setactiveModal("ADD Dynamic Banner")}>
-                    ADD Dynamic Banner
-                  </button>
-                  <button
-                    onClick={() => setactiveModal("ADD Dynamic Products")}
-                  >
-                    ADD Dynamic Products
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Features")}>
-                    ADD Features
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Count Down")}>
-                    ADD Count Down
-                  </button>
-                  <button onClick={() => setactiveModal("ADD staticBanner")}>
-                    Static Banner{" "}
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Static Products")}>
-                    ADD Static Products
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Dynamic Banner")}>
-                    ADD Dynamic Banner
-                  </button>
-                  <button
-                    onClick={() => setactiveModal("ADD Dynamic Products")}
-                  >
-                    ADD Dynamic Products
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Features")}>
-                    ADD Features
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Count Down")}>
-                    ADD Count Down
-                  </button>
-                  <button onClick={() => setactiveModal("ADD staticBanner")}>
-                    Static Banner{" "}
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Static Products")}>
-                    ADD Static Products
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Dynamic Banner")}>
-                    ADD Dynamic Banner
-                  </button>
-                  <button
-                    onClick={() => setactiveModal("ADD Dynamic Products")}
-                  >
-                    ADD Dynamic Products
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Features")}>
-                    ADD Features
-                  </button>
-                  <button onClick={() => setactiveModal("ADD Count Down")}>
-                    ADD Count Down
+                  <button onClick={() => setactiveModal({ name: "brands" })}>
+                    ADD Brands
                   </button>
                 </div>
               </li>

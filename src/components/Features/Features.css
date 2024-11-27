@@ -11,6 +11,7 @@
 
 .features .wrapper .item {
   flex: 1;
+  justify-content: space-around;
   text-align: right;
   padding: 24px 12px;
   border: 1px solid lightgray;

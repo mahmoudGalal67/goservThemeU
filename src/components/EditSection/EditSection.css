@@ -55,6 +55,10 @@
   background-color: rgb(129, 188, 207);
   color: white;
 }
+.react-responsive-modal-modal button.submit:disabled {
+  background-color: rgb(186, 211, 219);
+  cursor: not-allowed;
+}
 
 .react-responsive-modal-modal label {
   display: flex;

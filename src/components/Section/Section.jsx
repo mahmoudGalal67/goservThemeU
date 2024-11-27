@@ -13,8 +13,8 @@ function Section({ id, title, setModalShow, setactiveModal }) {
   };
 
   const handleClick = () => {
-    setactiveModal(title);
     setModalShow(true);
+    setactiveModal({ id, title });
   };
 
   return (

@@ -16,7 +16,6 @@ import Footer from "../../components/Footer/Footer";
 import Sidebar from "../../components/Sidebar/SideBar";
 
 import "./HomeDesign.css";
-import StaticBanner from "../../components/StaticBanner/StaticBanner";
 import { useLayoutEffect, useState } from "react";
 import { request } from "../../components/utils/Request";
 
@@ -33,13 +32,13 @@ function HomeDesign() {
         });
         data.map((item) => {
           if (item.name == "Sec1") {
-            section.push(<Features />);
+            section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec2") {
-            section.push(<Blogs />);
+            section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec3") {
             section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec4") {
-            section.push(<StaticSlider />);
+            section.push(<Features />);
           } else if (item.name == "Sec5") {
             section.push(<Offers />);
           } else if (item.name == "Sec6") {

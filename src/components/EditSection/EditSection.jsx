@@ -6,8 +6,9 @@ import "./EditSection.css";
 import { request } from "../utils/Request";
 
 function EditSection({ setModalShow, modalShow, activeModal }) {
+  const [loading, setloading] = useState(false);
   const onCloseModal = () => setModalShow(false);
-  const [sectionData, setsectionData] = useState([]);
+  const [sectionData, setsectionData] = useState(null);
 
   const add = () => {
     setsectionData((prev) => [
@@ -27,15 +28,16 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
     const getAllBrands = async () => {
       try {
         const { data } = await request({
-          url: "/api/dashboard/brands?lang=en",
+          url: `/api/dashboard/get-banner/${activeModal.id}`,
         });
-        setsectionData(data);
+        setsectionData(data.data.items);
+        setloading(false);
       } catch (error) {
-        console.log(err);
+        console.log(error);
       }
     };
     getAllBrands();
-  }, []);
+  }, [activeModal]);
 
   const handleInputChange = (e, i) => {
     setsectionData((prev) =>
@@ -51,8 +53,6 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
       })
     );
   };
-
-  console.log(sectionData);
 
   const handleFileChange = (e, i) => {
     setsectionData((prev) =>
@@ -71,26 +71,38 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    onCloseModal();
+    const newData = sectionData.map((item) => {
+      if (item.file) {
+        return { ...item, logo: item.file };
+      } else {
+        return item;
+      }
+    });
     try {
+      setloading(true);
       const { data } = await request({
-        url: "/api/dashboard/update-brands",
+        url: "/api/dashboard/update-banner",
         method: "post",
         headers: {
           "Content-Type": "multipart/form-data",
         },
         // withCredentials: true,
-        data: { brands: sectionData },
+        data: { brands: { ...newData, id: activeModal.id } },
         // Authorization: `Bearer ${cookies?.user}`,
       });
+      setloading(false);
+
+      onCloseModal();
     } catch (err) {
+      setloading(false);
       console.log(err);
     }
   };
-
-  if (!sectionData) {
+  console.log(sectionData);
+  if (!sectionData || !activeModal) {
     return;
   }
+  // return;
 
   return (
     <div className="edit-section">
@@ -99,7 +111,7 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
           <form onSubmit={submit}>
             <div>
               {" "}
-              <h2>{activeModal}</h2>
+              <h2>{activeModal?.title}</h2>
             </div>
             {sectionData.map((section, i) => (
               <div className="wrapper" key={i}>
@@ -117,23 +129,23 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
                 <p>*صورة البنر</p>
                 <span>* المقاس المناسب للصورة هو 1108×428 بكسل</span>
                 <label htmlFor={`file ${i}`}>
-                  {sectionData[i].file ? (
+                  {section.file ? (
                     <img
                       style={{
                         width: "100%",
                         height: "120px",
                         objectFit: "cover",
                       }}
-                      src={URL.createObjectURL(sectionData[i].file)}
+                      src={URL.createObjectURL(section.file)}
                     />
-                  ) : sectionData[i].logo ? (
+                  ) : section.photo ? (
                     <img
                       style={{
                         width: "100%",
                         height: "120px",
                         objectFit: "cover",
                       }}
-                      src={`https://goservback.alyoumsa.com/public/storage/${sectionData[i].logo}`}
+                      src={`https://goservback.alyoumsa.com/public/storage/${section.photo}`}
                       alt=""
                     />
                   ) : (
@@ -149,7 +161,6 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
                 </label>
                 <input
                   type="file"
-                  required
                   id={`file ${i}`}
                   style={{ display: "none" }}
                   onChange={(e) => handleFileChange(e, i)}
@@ -160,7 +171,7 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
                   placeholder="name"
                   required
                   onChange={(e) => handleInputChange(e, i)}
-                  value={sectionData[i].name.en}
+                  value={section.title}
                 />
                 <input
                   type="text"
@@ -168,15 +179,15 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
                   placeholder="description"
                   required
                   onChange={(e) => handleInputChange(e, i)}
-                  value={sectionData[i].description.en}
+                  value={section.description}
                 />
               </div>
             ))}
             <button className="add" onClick={add}>
               اضافة +
             </button>
-            <button className="submit" type="submit">
-              حفظ التغيرات
+            <button className="submit" type="submit" disabled={loading}>
+              {loading ? "loading ..." : "حفظ التغيرات"}
             </button>
           </form>
         </Modal>

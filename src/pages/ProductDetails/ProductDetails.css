@@ -175,6 +175,7 @@
 }
 
 .product-details .right .wrapper .side-images .side-img {
+  width: fit-content;
   padding: 8px;
   border: 1px solid rgb(238, 231, 231);
   border-radius: 8px;

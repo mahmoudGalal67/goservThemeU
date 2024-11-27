@@ -11,24 +11,27 @@ import "./DynamicSlider.css";
 import { request } from "../utils/Request";
 import { Link } from "react-router-dom";
 
-function DynamicSlider({ number, id }) {
-  const [banners, setbanners] = useState([]);
+function DynamicSlider({ id }) {
+  const [banners, setbanners] = useState({});
   const [err, setErr] = useState(null);
 
   useEffect(() => {
     const getbanners = async () => {
       try {
         const { data } = await request({
-          url: "/api/dashboard/banners",
+          url: `/api/dashboard/get-banner/${id}`,
         });
         setbanners(data.data);
       } catch (error) {
-        setErr(error.response?.data?.message);
+        setErr(error);
       }
     };
     getbanners();
   }, []);
 
+  if (!banners.items) {
+    return;
+  }
   return (
     <section className="dynamic-slider">
       <div className="wrapper">
@@ -43,56 +46,26 @@ function DynamicSlider({ number, id }) {
           pagination={true}
           modules={[Navigation, Pagination]}
         >
-          {banners.map((banner) => {
-            if (banner.id == id) {
-              return banner.items.map((item) => (
-                <SwiperSlide
-                  className="flex"
-                  style={
-                    number === 2
-                      ? {
-                          backgroundImage: url(item.photo),
-
-                          backgroundSize: "cover",
-                        }
-                      : null
-                  }
-                >
-                  <h2>{item.title}</h2>
-                  <p>{item.description}</p>
-                  <Link className="custom-link-filled" to={item.link}>
-                    تسوق الآن
-                  </Link>
-                </SwiperSlide>
-              ));
-            }
-          })}
-
-          <SwiperSlide
-            className="flex"
-            style={
-              number === 2
-                ? {
-                    backgroundImage: "url(banner.png)",
-                    backgroundSize: "cover",
-                  }
-                : null
-            }
-          >
-            <h2>أفضل التخفيضات 2024</h2>
-            <p>
-              متجر سلة يوفر لك كل ماتحتاجه من إلكترونيات أو أثاث منزلي بالإضافة
-              إلى أفضل <br /> التحفيضات على المنتجات , تسوق الان واستمتع بكل
-              بالتخفيضات على المنتجات
-            </p>
-            <a className="custom-link-filled" href="#">
-              تسوق الآن
-            </a>
-          </SwiperSlide>
+          {banners.items.map((banner) => (
+            <SwiperSlide
+              key={banner.id}
+              className="flex"
+              style={{
+                backgroundImage: `url(
+                  https://goservback.alyoumsa.com/public/storage/${banner.photo}`,
+                backgroundSize: "cover",
+              }}
+            >
+              <h2>{banner.title}</h2>
+              <p>{banner.description}</p>
+              <Link className="custom-link-filled" to={`#`}>
+                تسوق الآن
+              </Link>
+            </SwiperSlide>
+          ))}
         </Swiper>
       </div>
     </section>
   );
 }
-
 export default DynamicSlider;
