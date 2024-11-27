@@ -11,8 +11,9 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
   const onCloseModal = () => setModalShow(false);
   const [sectionData, setsectionData] = useState([
     {
-      name: "",
-      description: "",
+      title: { en: "", ar: "" },
+      description: { en: "", ar: "" },
+      link: "#",
     },
   ]);
 
@@ -20,7 +21,7 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
     setsectionData((prev) => [
       ...prev,
       {
-        name: "",
+        title: "",
         description: "",
       },
     ]);
@@ -44,14 +45,13 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
       })
     );
   };
-
   const handleFileChange = (e, i) => {
     setsectionData((prev) =>
       prev.map((el, index) => {
         if (index == i) {
           return {
             ...el,
-            file: e.target.files[0],
+            photo: e.target.files[0],
           };
         } else {
           return el;
@@ -62,31 +62,29 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    const newData = sectionData.map((item) => {
-      if (item.file) {
-        return { ...item, logo: item.file };
-      } else {
-        return item;
-      }
-    });
+
     try {
       setloading(true);
 
       const { data } = await request({
-        url: "/api/dashboard/store-brands",
+        url: "/api/dashboard/banners",
         method: "post",
         headers: {
           "Content-Type": "multipart/form-data",
         },
         // withCredentials: true,
-        data: { brands: newData },
+        data: {
+          items: [...sectionData],
+          name: activeModal.title,
+        },
         // Authorization: `Bearer ${cookies?.user}`,
       });
       setloading(false);
       setsectionData([
         {
-          name: "",
-          description: "",
+          title: { en: "", ar: "" },
+          description: { en: "", ar: "" },
+          link: "#",
         },
       ]);
       onCloseModal();
@@ -108,7 +106,7 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
           <form onSubmit={submit}>
             <div>
               {" "}
-              <h2>{activeModal}</h2>
+              <h2>{activeModal?.title}</h2>
             </div>
             {sectionData.map((section, i) => (
               <div className="wrapper" key={i}>
@@ -126,24 +124,14 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
                 <p>*صورة البنر</p>
                 <span>* المقاس المناسب للصورة هو 1108×428 بكسل</span>
                 <label htmlFor={`file ${i}`}>
-                  {sectionData[i].file ? (
+                  {section.photo ? (
                     <img
                       style={{
                         width: "100%",
                         height: "120px",
                         objectFit: "cover",
                       }}
-                      src={URL.createObjectURL(sectionData[i].file)}
-                    />
-                  ) : sectionData[i].logo ? (
-                    <img
-                      style={{
-                        width: "100%",
-                        height: "120px",
-                        objectFit: "cover",
-                      }}
-                      src={`https://goservback.alyoumsa.com/public/storage/${sectionData[i].logo}`}
-                      alt=""
+                      src={URL.createObjectURL(section.photo)}
                     />
                   ) : (
                     <>
@@ -164,11 +152,11 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
                 />
                 <input
                   type="text"
-                  name="name"
+                  name="title"
                   placeholder="name"
                   required
                   onChange={(e) => handleInputChange(e, i)}
-                  value={sectionData[i].name.en}
+                  value={section.title.en}
                 />
                 <input
                   type="text"
@@ -176,7 +164,7 @@ function AddtSection({ setModalShow, modalShow, activeModal }) {
                   placeholder="description"
                   required
                   onChange={(e) => handleInputChange(e, i)}
-                  value={sectionData[i].description.en}
+                  value={section.description.en}
                 />
               </div>
             ))}

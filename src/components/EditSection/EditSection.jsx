@@ -14,7 +14,7 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
     setsectionData((prev) => [
       ...prev,
       {
-        name: "",
+        title: "",
         description: "",
       },
     ]);
@@ -25,18 +25,20 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
   };
 
   useEffect(() => {
-    const getAllBrands = async () => {
-      try {
-        const { data } = await request({
-          url: `/api/dashboard/get-banner/${activeModal.id}`,
-        });
-        setsectionData(data.data.items);
-        setloading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getAllBrands();
+    if (modalShow) {
+      const getAllBrands = async () => {
+        try {
+          const { data } = await request({
+            url: `/api/dashboard/get-banner/${activeModal.id}`,
+          });
+          setsectionData(data.data.items);
+          setloading(false);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getAllBrands();
+    }
   }, [activeModal]);
 
   const handleInputChange = (e, i) => {
@@ -71,13 +73,23 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    const newData = sectionData.map((item) => {
+    let newData = sectionData.map((item) => {
       if (item.file) {
-        return { ...item, logo: item.file };
+        return {
+          ...item,
+          photo: item.file,
+          description: { en: item.description },
+          title: { en: item.title },
+        };
       } else {
-        return item;
+        return {
+          ...item,
+          description: { en: item.description },
+          title: { en: item.title },
+        };
       }
     });
+
     try {
       setloading(true);
       const { data } = await request({
@@ -88,11 +100,9 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
         },
         // withCredentials: true,
         data: {
-          brands: {
-            ...newData,
-            banner_id: activeModal.id,
-            name: activeModal.title,
-          },
+          items: [...newData],
+          banner_id: activeModal.id,
+          name: activeModal.title,
         },
         // Authorization: `Bearer ${cookies?.user}`,
       });
@@ -104,7 +114,6 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
       console.log(err);
     }
   };
-  console.log(sectionData);
   if (!sectionData || !activeModal) {
     return;
   }
@@ -173,7 +182,7 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
                 />
                 <input
                   type="text"
-                  name="name"
+                  name="title"
                   placeholder="name"
                   required
                   onChange={(e) => handleInputChange(e, i)}

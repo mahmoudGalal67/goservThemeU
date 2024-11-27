@@ -120,17 +120,26 @@ function HomeElements({ settoggleSidebar }) {
                 <div className="add-wrapper-sections">
                   <button
                     onClick={() => {
-                      setactiveModal("brands");
+                      setactiveModal({ title: "banners" });
                       setAddModalShow(true);
                     }}
                   >
-                    brands{" "}
+                    ADD New Banners
                   </button>
-                  <button onClick={() => setactiveModal({ name: "banners" })}>
-                    ADD Banners
+                  <button onClick={() => setactiveModal({ title: "brands" })}>
+                    ADD New Brands
                   </button>
-                  <button onClick={() => setactiveModal({ name: "brands" })}>
-                    ADD Brands
+                  <button onClick={() => setactiveModal({ title: "banners" })}>
+                    ADD New Banners
+                  </button>
+                  <button onClick={() => setactiveModal({ title: "brands" })}>
+                    ADD New Brands
+                  </button>
+                  <button onClick={() => setactiveModal({ title: "banners" })}>
+                    ADD New Banners
+                  </button>
+                  <button onClick={() => setactiveModal({ title: "brands" })}>
+                    ADD New Brands
                   </button>
                 </div>
               </li>

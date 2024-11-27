@@ -38,9 +38,9 @@ function HomeDesign() {
           } else if (item.name == "Sec3") {
             section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec4") {
-            section.push(<Features />);
+            section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec5") {
-            section.push(<Offers />);
+            section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec6") {
             section.push(<CountdownProduct />);
           }
