@@ -45,7 +45,7 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
         if (index == i) {
           return {
             ...el,
-            [e.target.name]: { en: e.target.value, ar: e.target.value },
+            [e.target.name]: e.target.value,
           };
         } else {
           return el;
@@ -87,7 +87,13 @@ function EditSection({ setModalShow, modalShow, activeModal }) {
           "Content-Type": "multipart/form-data",
         },
         // withCredentials: true,
-        data: { brands: { ...newData, id: activeModal.id } },
+        data: {
+          brands: {
+            ...newData,
+            banner_id: activeModal.id,
+            name: activeModal.title,
+          },
+        },
         // Authorization: `Bearer ${cookies?.user}`,
       });
       setloading(false);
