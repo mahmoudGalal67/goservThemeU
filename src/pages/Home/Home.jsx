@@ -78,7 +78,6 @@ function Home() {
       {sectionsOrder.map((item, i) => (
         <div key={i}>{item}</div>
       ))}
-      <DynamicPrducts />
 
       <Footer />
       <FloatingButton />

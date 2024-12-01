@@ -203,10 +203,11 @@ function ProductDetails() {
       updateItemQuantity({
         ...ProductDetails,
         quantity: count,
-        price: ProductDetails.product_colors
-          ? ProductDetails.product_colors[ProductColorID].product_color_sizes
-              .price[SizeId]
-          : ProductDetails.price,
+        price:
+          ProductDetails.product_colors.lenght > 0
+            ? ProductDetails.product_colors[ProductColorID].product_color_sizes
+                .price[SizeId]
+            : ProductDetails.price,
       })
     );
   };
@@ -269,34 +270,36 @@ function ProductDetails() {
                   <div className="images">
                     <h3>صور المنتج</h3>
                     <div className="wrapper flex justify-content-end">
-                      {ProductDetails.product_colors[ProductColorID].photos.map(
-                        (img, i) => (
+                      {ProductDetails.product_colors.lenght > 0 &&
+                        ProductDetails.product_colors[
+                          ProductColorID
+                        ].photos.map((img, i) => (
                           <ModalImage
                             small={`https://goservback.alyoumsa.com/public/storage/${img}`}
                             large={`https://goservback.alyoumsa.com/public/storage/${img}`}
                             alt={i}
                           />
-                        )
-                      )}
+                        ))}
                     </div>
                   </div>
                   <div className="colors">
                     <h3>الألوان المتاحة</h3>
                     <div className="wrapper flex">
-                      {ProductDetails.product_colors.map((item, i) => (
-                        <div
-                          key={i}
-                          className={i == ProductColorID ? "active" : ""}
-                          onClick={() => setProductColorID(Number(i))}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            backgroundColor: item.hex_code,
-                            cursor: "pointer",
-                          }}
-                        ></div>
-                      ))}
+                      {ProductDetails.product_colors &&
+                        ProductDetails.product_colors.map((item, i) => (
+                          <div
+                            key={i}
+                            className={i == ProductColorID ? "active" : ""}
+                            onClick={() => setProductColorID(Number(i))}
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                              borderRadius: "50%",
+                              backgroundColor: item.hex_code,
+                              cursor: "pointer",
+                            }}
+                          ></div>
+                        ))}
                     </div>
                   </div>
                 </Accordion.Body>
@@ -345,7 +348,8 @@ function ProductDetails() {
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
-          {ProductDetails.product_colors ? (
+          {ProductDetails.product_colors.lenght > 0 &&
+          ProductDetails.product_colors ? (
             <div className="choose-size flex w-100 justify-content-between gap-3 p-4">
               <select
                 onChange={(e) => handleSizeChange(e)}
@@ -364,7 +368,7 @@ function ProductDetails() {
           )}
           <div className="count">
             <div className="price">
-              {ProductDetails.product_colors
+              {ProductDetails.product_colors.lenght > 0
                 ? ProductDetails.product_colors[ProductColorID]
                     .product_color_sizes.price[SizeId]
                 : ProductDetails.price}
@@ -466,25 +470,26 @@ function ProductDetails() {
                 slidesPerView={2}
                 className="mySwiper"
               >
-                {ProductDetails?.photos.map((img, i) => (
-                  <SwiperSlide>
-                    <div
-                      className={
-                        img == ProductDetails.firstPhoto
-                          ? "side-img active"
-                          : "side-img"
-                      }
-                      style={{ cursor: "pointer" }}
-                      key={i}
-                      onClick={() => setFirstPhoto(i)}
-                    >
-                      <img
-                        src={`https://goservback.alyoumsa.com/public/storage/${img}`}
-                        alt=""
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
+                {ProductDetails?.photos &&
+                  ProductDetails?.photos.map((img, i) => (
+                    <SwiperSlide>
+                      <div
+                        className={
+                          img == ProductDetails.firstPhoto
+                            ? "side-img active"
+                            : "side-img"
+                        }
+                        style={{ cursor: "pointer" }}
+                        key={i}
+                        onClick={() => setFirstPhoto(i)}
+                      >
+                        <img
+                          src={`https://goservback.alyoumsa.com/public/storage/${img}`}
+                          alt=""
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
               </Swiper>
             </div>
           </div>
