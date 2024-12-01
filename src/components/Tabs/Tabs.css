@@ -2,6 +2,9 @@
   padding: 45px 4%;
   direction: rtl;
 }
+.tabs .tab-content img {
+  max-width: 100%;
+}
 
 button#uncontrolled-tab-example-tab-contact:focus,
 button#uncontrolled-tab-example-tab-profile:focus,

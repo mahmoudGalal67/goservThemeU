@@ -3,7 +3,8 @@ import phone2 from "../../images/phone2.png";
 import phone3 from "../../images/phone3.png";
 import image1 from "../../images/Image1.png";
 
-function ProductDetails({ ProductDetails }) {
+function Details({ ProductDetails }) {
+  console.log("test", ProductDetails);
   return (
     <section className="border-1 border-secondary">
       {/* <p className="mt-4 mx-3">
@@ -91,4 +92,4 @@ function ProductDetails({ ProductDetails }) {
   );
 }
 
-export default ProductDetails;
+export default Details;

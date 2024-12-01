@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
-import client1 from "../../images/client1.jpg";
-import client2 from "../../images/client2.jfif";
-import client3 from "../../images/client3.jfif";
-import client4 from "../../images/client4.jfif";
+import client from "../../images/user.svg";
+
 import { request } from "../utils/Request";
 import { useCookies } from "react-cookie";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,9 +15,8 @@ function ProductReviews() {
   const [cookies, setCookie] = useCookies(["user"]);
   const { user } = useContext(AuthContext);
 
-  const navigate = useNavigate();
-
   const [err, setErr] = useState(null);
+  const [loading, setloading] = useState(false);
 
   const [reviewsNumber, setReviewsNumber] = useState(1);
   const [comment, setComment] = useState("");
@@ -35,21 +32,23 @@ function ProductReviews() {
       return;
     }
     try {
-      await request({
-        url: "/api/website/product-review",
+      setloading(true);
+      const { data } = await request({
+        url: "api/website/product-review/create",
         method: "post",
         withCredentials: true,
         data: {
           user_id: user.id,
-          product_id: id,
+          product_id: Number(id),
           rating: reviewsNumber,
           comment,
-          user: user.name,
         },
-        Authorization: `Bearer ${cookies?.user}`,
+        headers: { Authorization: `Bearer ${cookies?.user}` },
       });
       setComment("");
       setReviewsNumber(1);
+      setproductReview((prev) => [data.data, ...prev]);
+      setloading(false);
     } catch (err) {
       console.log(err);
     }
@@ -111,6 +110,7 @@ function ProductReviews() {
               className="add-review h-25 mx-4 p-2 mt-3 rounded rounded-2"
               placeholder=" برجاءأضف تعليقك .."
               onChange={(e) => setComment(e.target.value)}
+              value={comment}
               required
             ></textarea>
             <button
@@ -118,7 +118,7 @@ function ProductReviews() {
               type="submit"
             >
               {" "}
-              انشر تعليقك{" "}
+              {loading ? "loading ... " : "انشر تعليقك"}
             </button>
           </form>
         </div>
@@ -136,7 +136,7 @@ function ProductReviews() {
                 <div className="d-flex justify-content-between">
                   <div className="mt-4 mx-2">
                     <img
-                      src={review.img || client1}
+                      src={review.img || client}
                       className="rounded rounded-circle"
                       width={50}
                       height={50}
@@ -172,112 +172,6 @@ function ProductReviews() {
               <hr />
             </>
           ))}
-
-          <div>
-            <div className="d-flex justify-content-between">
-              <div className="mt-4 mx-2">
-                <img
-                  src={client2}
-                  className="rounded rounded-circle"
-                  width={50}
-                  height={50}
-                  alt=""
-                />
-                <div className="user-info  mt-0">
-                  <p> محمد خالد </p>
-                  <p style={{ color: "#FFC62A" }}>
-                    {" "}
-                    <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
-                    <FaRegStar style={{ color: "#546581" }} />{" "}
-                  </p>
-                </div>
-              </div>
-              <div className="date mt-4 fw-medium">
-                <p> 10 / 13 / 2020 </p>
-              </div>
-            </div>
-
-            <p className="mx-5 fw-medium" style={{ color: "#49505C" }}>
-              استخدمنا سلة قبل أربع سنوات ثم غادرناها قبل أن يكون فيها خيارات
-              ترقية مدفوعة، خسرنا مبالغ كبيرة جدا في عمل متجر وتعبنا جدا في
-              التعامل مع المبرمجين . ثم عدنا لمنصة سلة ووجدنا تطورا هائلاً وعملا
-              مميزاً
-            </p>
-          </div>
-          {/* user2 */}
-
-          <hr />
-
-          <div>
-            <div className="d-flex justify-content-between">
-              <div className="mt-4 mx-2">
-                <img
-                  src={client3}
-                  className="rounded rounded-circle"
-                  width={50}
-                  height={50}
-                  alt=""
-                />
-                <div className="user-info  mt-0">
-                  <p> رضا محمد </p>
-                  <p style={{ color: "#FFC62A" }}>
-                    {" "}
-                    <FaStar /> <FaStar /> <FaStar />{" "}
-                    <FaRegStar style={{ color: "#546581" }} />{" "}
-                    <FaRegStar style={{ color: "#546581" }} />{" "}
-                  </p>
-                </div>
-              </div>
-              <div className="date mt-4 fw-medium">
-                <p> 10 / 13 / 2020 </p>
-              </div>
-            </div>
-
-            <p className="mx-5 fw-medium" style={{ color: "#49505C" }}>
-              استخدمنا سلة قبل أربع سنوات ثم غادرناها قبل أن يكون فيها خيارات
-              ترقية مدفوعة، خسرنا مبالغ كبيرة جدا في عمل متجر وتعبنا جدا في
-              التعامل مع المبرمجين . ثم عدنا لمنصة سلة ووجدنا تطورا هائلاً وعملا
-              مميزاً
-            </p>
-          </div>
-          {/* user3 */}
-
-          <hr />
-
-          <div>
-            <div className="d-flex justify-content-between">
-              <div className="mt-4 mx-2">
-                <img
-                  src={client4}
-                  className="rounded rounded-circle"
-                  width={50}
-                  height={50}
-                  alt=""
-                />
-                <div className="user-info  mt-0">
-                  <p> محمد خالد </p>
-                  <p style={{ color: "#FFC62A" }}>
-                    {" "}
-                    <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
-                    <FaRegStar style={{ color: "#546581" }} />{" "}
-                  </p>
-                </div>
-              </div>
-              <div className="date mt-4 fw-medium">
-                <p> 10 / 13 / 2020 </p>
-              </div>
-            </div>
-
-            <p className="mx-5 fw-medium" style={{ color: "#49505C" }}>
-              استخدمنا سلة قبل أربع سنوات ثم غادرناها قبل أن يكون فيها خيارات
-              ترقية مدفوعة، خسرنا مبالغ كبيرة جدا في عمل متجر وتعبنا جدا في
-              التعامل مع المبرمجين . ثم عدنا لمنصة سلة ووجدنا تطورا هائلاً وعملا
-              مميزاً
-            </p>
-          </div>
-          {/* user4 */}
-
-          <hr />
 
           <button className="btn-more btn btn-lg btn-outline-success mt-4">
             {" "}

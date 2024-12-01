@@ -72,10 +72,6 @@
   font-size: 18px;
 }
 
-.product-details .accordion .accordion-body .images img {
-  width: 20%;
-}
-
 .product-details .accordion-button::after {
   width: 40px;
   height: 40px;

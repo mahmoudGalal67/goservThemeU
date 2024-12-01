@@ -155,11 +155,10 @@ function ProductDetails() {
   useEffect(() => {
     const getProductDetails = async () => {
       try {
-        // const { data } = await request({
-        //   url: `/api/dashboard/products/${id}`,
-        // });
-        // setProductDetails(data.product);
-        setProductDetails(productDummy);
+        const { data } = await request({
+          url: `/api/dashboard/products/${id}`,
+        });
+        setProductDetails(data.product);
       } catch (error) {
         setErr(error);
       }

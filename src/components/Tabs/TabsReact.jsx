@@ -1,12 +1,12 @@
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import ProductDetails from "./ProductDetails";
+import Details from "./ProductDetails";
 import ProductReviews from "./ProductReviews";
 import ProductFeatures from "./ProductFeatures";
 
 import "./Tabs.css";
 
-function TabsReact() {
+function TabsReact({ ProductDetails }) {
   return (
     <>
       <Tabs
@@ -15,7 +15,7 @@ function TabsReact() {
         className="mb-3"
       >
         <Tab eventKey="home" title="تفاصيل المنتج">
-          <ProductDetails ProductDetails={ProductDetails} />
+          <Details ProductDetails={ProductDetails} />
         </Tab>
 
         <Tab eventKey="profile" title="مميزات المنتج">
