@@ -1,11 +1,13 @@
 .menu-sub.theme-coustomize .code {
   height: 40% !important;
-
+  margin: 12px;
+  width: 90%;
   padding: 0 !important;
 }
 .menu-sub.theme-coustomize .code textarea {
   padding: 12px;
   width: 100%;
+  border-radius: 8px;
   height: 100%;
   background-color: white;
   color: black;

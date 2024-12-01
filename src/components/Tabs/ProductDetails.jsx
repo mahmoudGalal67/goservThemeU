@@ -3,10 +3,10 @@ import phone2 from "../../images/phone2.png";
 import phone3 from "../../images/phone3.png";
 import image1 from "../../images/Image1.png";
 
-function ProductDetails() {
+function ProductDetails({ ProductDetails }) {
   return (
     <section className="border-1 border-secondary">
-      <p className="mt-4 mx-3">
+      {/* <p className="mt-4 mx-3">
         لقد تم تصميم هاتف ابل ايفون الذكي بهيكل ملفت وجميل يجعلك تحب النظر إليه
         في كل الأوقات. تعمل شاشة ليكويد رتينا 6.1 انش على جذب انتباهك وكل حواسك
         على عكس أي هاتف ذكي آخر. إن تصميم الزجاج والألومنيوم يجعلها متينًة وتضفي
@@ -85,7 +85,8 @@ function ProductDetails() {
             الدخول باستخدام خيار ابل وواجهة جديدة لتحرير الصور.
           </p>
         </div>
-      </div>
+      </div> */}
+      <div dangerouslySetInnerHTML={{ __html: ProductDetails?.details?.en }} />
     </section>
   );
 }

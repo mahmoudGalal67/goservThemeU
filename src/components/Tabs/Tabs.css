@@ -71,7 +71,8 @@ button#uncontrolled-tab-example-tab-contact {
 }
 
 .tabs .add-review {
-  width: 80%;
+  width: 90%;
+
   background-color: transparent;
   color: black;
 }

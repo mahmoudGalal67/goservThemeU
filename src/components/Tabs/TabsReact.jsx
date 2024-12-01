@@ -15,7 +15,7 @@ function TabsReact() {
         className="mb-3"
       >
         <Tab eventKey="home" title="تفاصيل المنتج">
-          <ProductDetails />
+          <ProductDetails ProductDetails={ProductDetails} />
         </Tab>
 
         <Tab eventKey="profile" title="مميزات المنتج">

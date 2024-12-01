@@ -63,7 +63,6 @@ function HomeElements({ settoggleSidebar }) {
         method: "post",
         data: [...sections],
       });
-      console.log(data);
       window.location.reload();
     } catch (err) {
       console.log(err);

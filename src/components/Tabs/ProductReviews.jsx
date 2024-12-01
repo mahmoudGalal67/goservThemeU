@@ -24,7 +24,7 @@ function ProductReviews() {
   const [reviewsNumber, setReviewsNumber] = useState(1);
   const [comment, setComment] = useState("");
 
-  const [productReview, setproductReview] = useState(null);
+  const [productReview, setproductReview] = useState([]);
 
   const { id } = useParams();
 
@@ -32,6 +32,7 @@ function ProductReviews() {
     e.preventDefault();
     if (!user) {
       toast.info("you have to login firist");
+      return;
     }
     try {
       await request({
@@ -67,10 +68,6 @@ function ProductReviews() {
     };
     getproductReview();
   }, [id]);
-
-  if (!productReview) {
-    return <div> loading ...</div>;
-  }
 
   return (
     <section>

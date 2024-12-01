@@ -4,8 +4,15 @@ import TabsReact from "../../components/Tabs/TabsReact";
 import DynamicPrducts from "../../components/DynamicProducts/DynamicProducts";
 import Footer from "../../components/Footer/Footer";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { request } from "../../components/utils/Request";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+
+import ModalImage from "react-modal-image";
 
 import {
   addItemToCart,
@@ -20,9 +27,106 @@ import "./ProductDetails.css";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { products } from "../../components/StaticProducts/dummyProducts";
+const productDummy = {
+  id: 225,
+  name: {
+    en: "samsong5",
+    ar: "سلمسونج 6",
+  },
+  description: {
+    en: "dssm",
+    ar: "سيس",
+  },
+  details: {
+    en: "sads",
+    ar: "يسشي",
+  },
+  category: "mobile",
+  brand: "as",
+  price: "20.00",
+  photos: [
+    "products/Ckb1qtL71zxkLCvNcyKKkzWlN8fjJI5J1uMbMVkC.jpg",
+    "products/Ckb1qtL71zxkLCvNcyKKkzWlN8fjJI5J1uMbMVkC.jpg",
+    "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
+    "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
+    "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
+    "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
+  ],
+  weight: "10.00",
+  created_at: "2024-11-24T21:43:46.000000Z",
+  updated_at: "2024-11-27T07:53:23.000000Z",
+  product_colors: [
+    {
+      color: "red",
+      hex_code: "red",
+      photos: [
+        "product-colors/YWHTTKqkHT9VhQCCpS1i1pPUMPQhUbS2eXkxWlMd.jpg",
+        "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
+      ],
+      product_color_sizes: {
+        size: ["1"],
+        quantity: [1],
+        price: ["1.00"],
+        cost: ["0.00"],
+      },
+    },
+    {
+      color: "green",
+      hex_code: "green",
+      photos: ["product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg"],
+      product_color_sizes: {
+        size: ["xl", "hj", "lk"],
+        quantity: [2, 1, 1],
+        price: ["2.00", "1.00", "0.00"],
+        cost: ["0.00", "0.00", "0.00"],
+      },
+    },
+  ],
+};
 
 function ProductDetails() {
+  // ZoomingEffect
+  const sourceRef = useRef(null);
+  const targetRef = useRef(null);
+  const containerRef = useRef(null);
+
+  const [opacity, setOpacity] = useState(0);
+  const [offset, setOffset] = useState({ left: 0, top: 0 });
+
+  const handleMouseEnter = () => {
+    setOpacity(1);
+  };
+
+  const handleMouseLeave = () => {
+    setOpacity(0);
+  };
+
+  const handleMouseMove = (e) => {
+    const targetRect = targetRef.current.getBoundingClientRect();
+    const sourceRect = sourceRef.current.getBoundingClientRect();
+    const containerRect = containerRef.current.getBoundingClientRect();
+
+    const xRatio = (targetRect.width - containerRect.width) / sourceRect.width;
+    const yRatio =
+      (targetRect.height - containerRect.height) / sourceRect.height;
+
+    const left = Math.max(
+      Math.min(e.pageX - sourceRect.left, sourceRect.width),
+      0
+    );
+    const top = Math.max(
+      Math.min(e.pageY - sourceRect.top, sourceRect.height),
+      0
+    );
+
+    setOffset({
+      left: left * -xRatio,
+      top: top * -yRatio,
+    });
+  };
+
+  // ZoomingEffect
+
   const [ProductDetails, setProductDetails] = useState(null);
   const [ProductColorID, setProductColorID] = useState(0);
   const [SizeId, setSizeId] = useState(0);
@@ -51,10 +155,11 @@ function ProductDetails() {
   useEffect(() => {
     const getProductDetails = async () => {
       try {
-        const { data } = await request({
-          url: `/api/dashboard/products/${id}`,
-        });
-        setProductDetails(data.product);
+        // const { data } = await request({
+        //   url: `/api/dashboard/products/${id}`,
+        // });
+        // setProductDetails(data.product);
+        setProductDetails(productDummy);
       } catch (error) {
         setErr(error);
       }
@@ -99,9 +204,10 @@ function ProductDetails() {
       updateItemQuantity({
         ...ProductDetails,
         quantity: count,
-        price:
-          ProductDetails.product_colors[ProductColorID].product_color_sizes
-            .price[SizeId],
+        price: ProductDetails.product_colors
+          ? ProductDetails.product_colors[ProductColorID].product_color_sizes
+              .price[SizeId]
+          : ProductDetails.price,
       })
     );
   };
@@ -149,55 +255,56 @@ function ProductDetails() {
           </div>
           <p>{ProductDetails.description.en}</p>
           <Accordion defaultActiveKey="0">
-            <Accordion.Item>
-              <Accordion.Header>
-                {" "}
-                <img
-                  style={{ width: "30px", margin: "0 48px" }}
-                  src="/edit.svg"
-                  alt=""
-                />
-                تخصيص المنتج{" "}
-              </Accordion.Header>
-              <Accordion.Body className="details">
-                <div className="images">
-                  <h3>صور المنتج</h3>
-                  <div className="wrapper flex justify-content-end">
-                    {ProductDetails.product_colors[ProductColorID].photos.map(
-                      (img, i) => (
-                        <img
+            {ProductDetails.product_colors ? (
+              <Accordion.Item>
+                <Accordion.Header>
+                  {" "}
+                  <img
+                    style={{ width: "30px", margin: "0 48px" }}
+                    src="/edit.svg"
+                    alt=""
+                  />
+                  تخصيص المنتج{" "}
+                </Accordion.Header>
+                <Accordion.Body className="details">
+                  <div className="images">
+                    <h3>صور المنتج</h3>
+                    <div className="wrapper flex justify-content-end">
+                      {ProductDetails.product_colors[ProductColorID].photos.map(
+                        (img, i) => (
+                          <ModalImage
+                            small={`https://goservback.alyoumsa.com/public/storage/${img}`}
+                            large={`https://goservback.alyoumsa.com/public/storage/${img}`}
+                            alt={i}
+                          />
+                        )
+                      )}
+                    </div>
+                  </div>
+                  <div className="colors">
+                    <h3>الألوان المتاحة</h3>
+                    <div className="wrapper flex">
+                      {ProductDetails.product_colors.map((item, i) => (
+                        <div
                           key={i}
-                          src={`https://goservback.alyoumsa.com/public/storage/${img}`}
+                          className={i == ProductColorID ? "active" : ""}
+                          onClick={() => setProductColorID(Number(i))}
                           style={{
-                            width: "120px",
-                            height: "120px ",
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            backgroundColor: item.hex_code,
+                            cursor: "pointer",
                           }}
-                        />
-                      )
-                    )}
+                        ></div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-                <div className="colors">
-                  <h3>الألوان المتاحة</h3>
-                  <div className="wrapper flex">
-                    {ProductDetails.product_colors.map((item, i) => (
-                      <div
-                        key={i}
-                        className={i == ProductColorID ? "active" : ""}
-                        onClick={() => setProductColorID(Number(i))}
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          borderRadius: "50%",
-                          backgroundColor: item.hex_code,
-                          cursor: "pointer",
-                        }}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-              </Accordion.Body>
-            </Accordion.Item>
+                </Accordion.Body>
+              </Accordion.Item>
+            ) : (
+              ""
+            )}
             <Accordion.Item eventKey="1">
               <Accordion.Header>
                 {" "}
@@ -239,25 +346,29 @@ function ProductDetails() {
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
-          <div className="choose-size flex w-100 justify-content-between gap-3 p-4">
-            <select
-              onChange={(e) => handleSizeChange(e)}
-              className="w-75 p-2 bg-light rounded-2 border-1 border-black-50 text-black-50"
-            >
-              {ProductDetails.product_colors[
-                ProductColorID
-              ].product_color_sizes.size.map((size, i) => (
-                <option value={i}>{size}</option>
-              ))}
-            </select>
-            <div className="fs-6 fw-bold">اختر المقاس</div>
-          </div>
+          {ProductDetails.product_colors ? (
+            <div className="choose-size flex w-100 justify-content-between gap-3 p-4">
+              <select
+                onChange={(e) => handleSizeChange(e)}
+                className="w-75 p-2 bg-light rounded-2 border-1 border-black-50 text-black-50"
+              >
+                {ProductDetails.product_colors[
+                  ProductColorID
+                ].product_color_sizes.size.map((size, i) => (
+                  <option value={i}>{size}</option>
+                ))}
+              </select>
+              <div className="fs-6 fw-bold">اختر المقاس</div>
+            </div>
+          ) : (
+            ""
+          )}
           <div className="count">
             <div className="price">
-              {
-                ProductDetails.product_colors[ProductColorID]
-                  .product_color_sizes.price[SizeId]
-              }
+              {ProductDetails.product_colors
+                ? ProductDetails.product_colors[ProductColorID]
+                    .product_color_sizes.price[SizeId]
+                : ProductDetails.price}
             </div>
             <div className="counter">
               <div onClick={() => setcount((prev) => prev + 1)}>+</div>
@@ -297,9 +408,17 @@ function ProductDetails() {
           </div>
         </div>
         <div className="right">
-          <div className="wrapper flex">
-            <div className="main-img">
+          <div className="wrapper flex flex-column">
+            <div
+              className="main-img"
+              ref={containerRef}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onMouseMove={handleMouseMove}
+            >
               <img
+                ref={sourceRef}
+                style={{ width: "100%" }}
                 src={
                   `https://goservback.alyoumsa.com/public/storage/${
                     ProductDetails.firstPhoto != undefined
@@ -309,33 +428,74 @@ function ProductDetails() {
                 }
                 alt=""
               />
+              <img
+                ref={targetRef}
+                alt="target"
+                style={{
+                  left: `${offset.left}px`,
+                  top: `${offset.top}px`,
+                  opacity: opacity,
+                  position: "absolute",
+                }}
+                src={
+                  `https://goservback.alyoumsa.com/public/storage/${
+                    ProductDetails.firstPhoto != undefined
+                      ? ProductDetails?.firstPhoto
+                      : ProductDetails?.photos[0]
+                  }` || "image-two.dd7d3cfc16bf56c43f01.png"
+                }
+              />
             </div>
             <div className="side-images">
-              {ProductDetails?.photos.map((img, i) => (
-                <div
-                  className={
-                    img == ProductDetails.firstPhoto
-                      ? "side-img active"
-                      : "side-img"
-                  }
-                  style={{ cursor: "pointer" }}
-                  key={i}
-                  onClick={() => setFirstPhoto(i)}
-                >
-                  <img
-                    src={`https://goservback.alyoumsa.com/public/storage/${img}`}
-                    alt=""
-                  />
-                </div>
-              ))}
+              <Swiper
+                breakpoints={{
+                  500: {
+                    slidesPerView: 2,
+                  },
+                  768: {
+                    slidesPerView: 4,
+                  },
+
+                  1200: {
+                    slidesPerView: 3,
+                  },
+                }}
+                pagination={{
+                  clickable: true,
+                }}
+                modules={[Pagination]}
+                slidesPerView={2}
+                className="mySwiper"
+              >
+                {ProductDetails?.photos.map((img, i) => (
+                  <SwiperSlide>
+                    <div
+                      className={
+                        img == ProductDetails.firstPhoto
+                          ? "side-img active"
+                          : "side-img"
+                      }
+                      style={{ cursor: "pointer" }}
+                      key={i}
+                      onClick={() => setFirstPhoto(i)}
+                    >
+                      <img
+                        src={`https://goservback.alyoumsa.com/public/storage/${img}`}
+                        alt=""
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
           </div>
         </div>
       </div>
       <div className="tabs">
-        <TabsReact />
+        <TabsReact ProductDetails={ProductDetails} />
       </div>
-      <DynamicPrducts />
+      {/* <DynamicPrducts /> */}
+
       <Footer />
     </div>
   );

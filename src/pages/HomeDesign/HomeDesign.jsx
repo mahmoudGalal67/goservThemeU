@@ -42,7 +42,7 @@ function HomeDesign() {
           } else if (item.name == "Sec5") {
             section.push(<DynamicSlider id={item.id} />);
           } else if (item.name == "Sec6") {
-            section.push(<CountdownProduct />);
+            section.push(<DynamicSlider id={7} />);
           }
         });
         setsectionsOrder(section);

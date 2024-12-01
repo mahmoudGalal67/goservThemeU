@@ -176,6 +176,7 @@
   margin: 0;
   z-index: 2;
   max-width: 400px;
+  overflow-y: auto;
 }
 .nav-mobile .menu-container .menu-sidebar li .menu-sub li {
   overflow: hidden;
@@ -201,7 +202,8 @@
   ~ .menu-sub {
   width: 65vw;
   visibility: visible;
-  z-index: 1;
+  z-index: 100000000000000;
+
   transition: width 0.35s cubic-bezier(0, 0, 0.3, 1);
 }
 
