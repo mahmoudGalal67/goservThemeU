@@ -19,12 +19,6 @@ function Cart() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.cart.items);
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     toast.error("You must log in to access the Cart page.");
-  //     navigate("/");
-  //   }
-  // }, [user, navigate]);
   const totalAmount = products.reduce(
     (total, product) => total + product.price * product.quantity,
     0

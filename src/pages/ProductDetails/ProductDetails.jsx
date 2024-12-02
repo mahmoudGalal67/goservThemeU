@@ -27,63 +27,6 @@ import "./ProductDetails.css";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-const productDummy = {
-  id: 225,
-  name: {
-    en: "samsong5",
-    ar: "سلمسونج 6",
-  },
-  description: {
-    en: "dssm",
-    ar: "سيس",
-  },
-  details: {
-    en: "sads",
-    ar: "يسشي",
-  },
-  category: "mobile",
-  brand: "as",
-  price: "20.00",
-  photos: [
-    "products/Ckb1qtL71zxkLCvNcyKKkzWlN8fjJI5J1uMbMVkC.jpg",
-    "products/Ckb1qtL71zxkLCvNcyKKkzWlN8fjJI5J1uMbMVkC.jpg",
-    "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
-    "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
-    "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
-    "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
-  ],
-  weight: "10.00",
-  created_at: "2024-11-24T21:43:46.000000Z",
-  updated_at: "2024-11-27T07:53:23.000000Z",
-  product_colors: [
-    {
-      color: "red",
-      hex_code: "red",
-      photos: [
-        "product-colors/YWHTTKqkHT9VhQCCpS1i1pPUMPQhUbS2eXkxWlMd.jpg",
-        "product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg",
-      ],
-      product_color_sizes: {
-        size: ["1"],
-        quantity: [1],
-        price: ["1.00"],
-        cost: ["0.00"],
-      },
-    },
-    {
-      color: "green",
-      hex_code: "green",
-      photos: ["product-colors/NGlytEsGxixvsb34dtAeMrYzPw61uMnf9mnE9ZrP.jpg"],
-      product_color_sizes: {
-        size: ["xl", "hj", "lk"],
-        quantity: [2, 1, 1],
-        price: ["2.00", "1.00", "0.00"],
-        cost: ["0.00", "0.00", "0.00"],
-      },
-    },
-  ],
-};
-
 function ProductDetails() {
   // ZoomingEffect
   const sourceRef = useRef(null);
@@ -204,7 +147,7 @@ function ProductDetails() {
         ...ProductDetails,
         quantity: count,
         price:
-          ProductDetails.product_colors.lenght > 0
+          ProductDetails.product_colors.length > 0
             ? ProductDetails.product_colors[ProductColorID].product_color_sizes
                 .price[SizeId]
             : ProductDetails.price,
@@ -218,7 +161,9 @@ function ProductDetails() {
   }
 
   if (!ProductDetails) {
-    return <div> loading ...</div>;
+    return (
+      <div style={{ textAlign: "center", width: "100%" }}> loading ...</div>
+    );
   }
   return (
     <div className="product-details">
@@ -255,7 +200,7 @@ function ProductDetails() {
           </div>
           <p>{ProductDetails.description.en}</p>
           <Accordion defaultActiveKey="0">
-            {ProductDetails.product_colors ? (
+            {ProductDetails.product_colors.length > 0 ? (
               <Accordion.Item>
                 <Accordion.Header>
                   {" "}
@@ -270,36 +215,34 @@ function ProductDetails() {
                   <div className="images">
                     <h3>صور المنتج</h3>
                     <div className="wrapper flex justify-content-end">
-                      {ProductDetails.product_colors.lenght > 0 &&
-                        ProductDetails.product_colors[
-                          ProductColorID
-                        ].photos.map((img, i) => (
+                      {ProductDetails.product_colors[ProductColorID].photos.map(
+                        (img, i) => (
                           <ModalImage
                             small={`https://goservback.alyoumsa.com/public/storage/${img}`}
                             large={`https://goservback.alyoumsa.com/public/storage/${img}`}
                             alt={i}
                           />
-                        ))}
+                        )
+                      )}
                     </div>
                   </div>
                   <div className="colors">
                     <h3>الألوان المتاحة</h3>
                     <div className="wrapper flex">
-                      {ProductDetails.product_colors &&
-                        ProductDetails.product_colors.map((item, i) => (
-                          <div
-                            key={i}
-                            className={i == ProductColorID ? "active" : ""}
-                            onClick={() => setProductColorID(Number(i))}
-                            style={{
-                              width: "30px",
-                              height: "30px",
-                              borderRadius: "50%",
-                              backgroundColor: item.hex_code,
-                              cursor: "pointer",
-                            }}
-                          ></div>
-                        ))}
+                      {ProductDetails.product_colors.map((item, i) => (
+                        <div
+                          key={i}
+                          className={i == ProductColorID ? "active" : ""}
+                          onClick={() => setProductColorID(Number(i))}
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            backgroundColor: item.hex_code,
+                            cursor: "pointer",
+                          }}
+                        ></div>
+                      ))}
                     </div>
                   </div>
                 </Accordion.Body>
@@ -348,7 +291,7 @@ function ProductDetails() {
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
-          {ProductDetails.product_colors.lenght > 0 &&
+          {ProductDetails.product_colors.length > 0 &&
           ProductDetails.product_colors ? (
             <div className="choose-size flex w-100 justify-content-between gap-3 p-4">
               <select
@@ -368,7 +311,7 @@ function ProductDetails() {
           )}
           <div className="count">
             <div className="price">
-              {ProductDetails.product_colors.lenght > 0
+              {ProductDetails.product_colors.length > 0
                 ? ProductDetails.product_colors[ProductColorID]
                     .product_color_sizes.price[SizeId]
                 : ProductDetails.price}
